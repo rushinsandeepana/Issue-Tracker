@@ -1,5 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Issue, IssueFilters, PaginationInfo, StatusCounts, CreateIssueData, UpdateIssueData } from '../../types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { Issue, IssueFilters, PaginationInfo, StatusCounts, CreateIssueData, UpdateIssueData } from '../../types';
 import { issuesAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 

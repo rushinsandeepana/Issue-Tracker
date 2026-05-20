@@ -1,5 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { AuthState, LoginCredentials, RegisterData, AuthResponse, User } from '../../types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { AuthState, LoginCredentials, RegisterData, AuthResponse, User } from '../../types';
 import { authAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 

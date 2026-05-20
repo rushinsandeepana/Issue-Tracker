@@ -1,5 +1,6 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios';
-import { LoginCredentials, RegisterData, AuthResponse, CreateIssueData, UpdateIssueData, IssuesResponse, Issue, ApiError } from '../types';
+import axios from 'axios';
+import type { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios';
+import type { LoginCredentials, RegisterData, AuthResponse, CreateIssueData, UpdateIssueData, IssuesResponse, Issue, ApiError } from '../types/index';
 import toast from 'react-hot-toast';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
