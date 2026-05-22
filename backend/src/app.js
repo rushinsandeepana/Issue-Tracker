@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const { initDatabase } = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const issueRoutes = require('./routes/issueRoutes');
+const { router: notificationRoutes } = require('./routes/notificationRoutes');
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/issues', issueRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Issue Tracker API running' });

@@ -17,7 +17,6 @@ class Issue {
         let query = 'SELECT * FROM issues WHERE user_id = ?';
         const params = [userId];
         
-        // Apply filters
         if (filters.status && filters.status !== 'all') {
             query += ' AND status = ?';
             params.push(filters.status);
@@ -33,12 +32,10 @@ class Issue {
             params.push(`%${filters.search}%`, `%${filters.search}%`);
         }
         
-        // Get total count
         const countQuery = query.replace('*', 'COUNT(*) as total');
         const [countResult] = await pool.execute(countQuery, params);
         const total = countResult[0].total;
         
-        // Add pagination
         const offset = (page - 1) * limit;
         query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
         params.push(limit, offset);
