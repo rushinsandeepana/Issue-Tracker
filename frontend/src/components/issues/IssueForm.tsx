@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FiSave, FiX } from 'react-icons/fi';
 import type { Issue, CreateIssueData } from '../../types';
 import Button from '../common/Button';
@@ -16,29 +16,19 @@ const IssueForm: React.FC<IssueFormProps> = ({
   onCancel,
   isLoading = false,
 }) => {
-  const [formData, setFormData] = useState<CreateIssueData>({
-    title: '',
-    description: '',
-    status: 'open',
-    priority: 'medium',
-    severity: 'minor',
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<CreateIssueData>(() => ({
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    status: initialData?.status || 'open',
+    priority: initialData?.priority || 'medium',
+    severity: initialData?.severity || 'minor',
+  }));
 
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        title: initialData.title,
-        description: initialData.description || '',
-        status: initialData.status,
-        priority: initialData.priority,
-        severity: initialData.severity,
-      });
-    }
-  }, [initialData]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
+
     if (!formData.title?.trim()) {
       newErrors.title = 'Title is required';
     } else if (formData.title.length < 3) {
@@ -46,12 +36,17 @@ const IssueForm: React.FC<IssueFormProps> = ({
     } else if (formData.title.length > 255) {
       newErrors.title = 'Title must be less than 255 characters';
     }
+
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("hiii");
+    
     e.preventDefault();
+
     if (validate()) {
       await onSubmit(formData);
     }
@@ -61,9 +56,17 @@ const IssueForm: React.FC<IssueFormProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({
+        ...prev,
+        [name]: '',
+      }));
     }
   };
 
@@ -73,6 +76,7 @@ const IssueForm: React.FC<IssueFormProps> = ({
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Title <span className="text-red-500">*</span>
         </label>
+
         <input
           type="text"
           name="title"
@@ -83,13 +87,19 @@ const IssueForm: React.FC<IssueFormProps> = ({
           }`}
           placeholder="Enter issue title"
         />
-        {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
+
+        {errors.title && (
+          <p className="mt-1 text-sm text-red-600">
+            {errors.title}
+          </p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Description
         </label>
+
         <textarea
           name="description"
           value={formData.description}
@@ -105,6 +115,7 @@ const IssueForm: React.FC<IssueFormProps> = ({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Status
           </label>
+
           <select
             name="status"
             value={formData.status}
@@ -122,6 +133,7 @@ const IssueForm: React.FC<IssueFormProps> = ({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Priority
           </label>
+
           <select
             name="priority"
             value={formData.priority}
@@ -139,6 +151,7 @@ const IssueForm: React.FC<IssueFormProps> = ({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Severity
           </label>
+
           <select
             name="severity"
             value={formData.severity}
@@ -154,11 +167,20 @@ const IssueForm: React.FC<IssueFormProps> = ({
       </div>
 
       <div className="flex gap-3 pt-4">
-        <Button type="submit" variant="primary" loading={isLoading}>
+        <Button
+          type="submit"
+          variant="primary"
+          loading={isLoading}
+        >
           <FiSave className="w-4 h-4 mr-2" />
           {initialData ? 'Update Issue' : 'Create Issue'}
         </Button>
-        <Button type="button" variant="secondary" onClick={onCancel}>
+
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={onCancel}
+        >
           <FiX className="w-4 h-4 mr-2" />
           Cancel
         </Button>

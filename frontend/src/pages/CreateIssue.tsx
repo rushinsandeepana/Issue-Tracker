@@ -4,14 +4,20 @@ import { useAppDispatch, useAppSelector } from '../store/store';
 import { createIssue } from '../store/slices/issueSlice';
 import { FiArrowLeft, FiSave, FiX } from 'react-icons/fi';
 import Button from '../components/common/Button';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
+import type {
+  // IssueStatus,
+  // IssuePriority,
+  // IssueSeverity,
+  CreateIssueData
+} from '../types/index';
 
 const CreateIssue: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { submitting } = useAppSelector((state) => state.issues);
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateIssueData>({
     title: '',
     description: '',
     status: 'open',

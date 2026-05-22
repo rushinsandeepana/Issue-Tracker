@@ -4,13 +4,13 @@ import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 
-// Components
 import PrivateRoute from './components/common/PrivateRoute';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Dashboard from './pages/Dashboard';
+import ViewIssues from './pages/ViewIssues';
+import Notifications from './pages/Notifications';
 import IssueDetails from './pages/IssueDetails';
-import CreateIssue from './pages/CreateIssue';
 
 function App() {
   return (
@@ -56,18 +56,26 @@ function App() {
               }
             />
             <Route
-              path="/issues/:id"
+              path="/issues"
               element={
                 <PrivateRoute>
-                  <IssueDetails />
+                  <ViewIssues />
                 </PrivateRoute>
               }
             />
             <Route
-              path="/create"
+              path="/notifications"
               element={
                 <PrivateRoute>
-                  <CreateIssue />
+                  <Notifications />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/issues/:id"
+              element={
+                <PrivateRoute>
+                  <IssueDetails />
                 </PrivateRoute>
               }
             />

@@ -53,7 +53,7 @@ export interface CreateIssueData {
   severity?: IssueSeverity;
 }
 
-export interface UpdateIssueData extends Partial<CreateIssueData> {}
+export type UpdateIssueData = Partial<CreateIssueData>;
 
 export interface IssueFilters {
   status: IssueStatus | 'all';
