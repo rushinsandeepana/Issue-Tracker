@@ -1,5 +1,6 @@
 const Issue = require('../models/Issue');
 const { validationResult } = require('express-validator');
+const { createNotification } = require('../routes/notificationRoutes');
 
 const createIssue = async (req, res) => {
     try {
@@ -12,6 +13,13 @@ const createIssue = async (req, res) => {
         const issueId = await Issue.create(issueData);
         
         const issue = await Issue.findById(issueId, req.userId);
+        
+        await createNotification(
+            req.userId,
+            'Issue Created',
+            `You created a new issue: "${issue.title}"`,
+            'success'
+        );
         
         res.status(201).json({
             message: 'Issue created successfully',
@@ -70,6 +78,8 @@ const updateIssue = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
         
+        const oldIssue = await Issue.findById(req.params.id, req.userId);
+        
         const updated = await Issue.update(req.params.id, req.userId, req.body);
         
         if (!updated) {
@@ -77,6 +87,31 @@ const updateIssue = async (req, res) => {
         }
         
         const issue = await Issue.findById(req.params.id, req.userId);
+        
+        let updateMessage = `You updated issue: "${issue.title}"`;
+        
+        if (req.body.status && req.body.status !== oldIssue.status) {
+            updateMessage += `\nStatus changed from ${oldIssue.status} to ${req.body.status}`;
+        }
+        if (req.body.priority && req.body.priority !== oldIssue.priority) {
+            updateMessage += `\nPriority changed from ${oldIssue.priority} to ${req.body.priority}`;
+        }
+        
+        await createNotification(
+            req.userId,
+            'Issue Updated',
+            updateMessage,
+            'info'
+        );
+        
+        if (req.body.status === 'resolved' && oldIssue.status !== 'resolved' && oldIssue.user_id !== req.userId) {
+            await createNotification(
+                oldIssue.user_id,
+                'Issue Resolved',
+                `Your issue "${issue.title}" has been resolved`,
+                'success'
+            );
+        }
         
         res.json({
             message: 'Issue updated successfully',
@@ -90,11 +125,24 @@ const updateIssue = async (req, res) => {
 
 const deleteIssue = async (req, res) => {
     try {
+        const issue = await Issue.findById(req.params.id, req.userId);
+        
+        if (!issue) {
+            return res.status(404).json({ error: 'Issue not found' });
+        }
+        
         const deleted = await Issue.delete(req.params.id, req.userId);
         
         if (!deleted) {
             return res.status(404).json({ error: 'Issue not found' });
         }
+        
+        await createNotification(
+            req.userId,
+            'Issue Deleted',
+            `You deleted issue: "${issue.title}"`,
+            'warning'
+        );
         
         res.json({ message: 'Issue deleted successfully' });
     } catch (error) {

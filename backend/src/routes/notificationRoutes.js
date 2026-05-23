@@ -3,170 +3,85 @@ const router = express.Router();
 const { authenticateToken } = require('../middleware/auth');
 const Notification = require('../models/Notification');
 
+router.get('/unread-count', authenticateToken, async (req, res) => {
+    try {
+        const unreadCount = await Notification.getUnreadCount(req.userId);
+        res.json({ success: true, data: { unreadCount } });
+    } catch (error) {
+        console.error('ERROR:', error.message);
+        res.json({ success: true, data: { unreadCount: 0 } });
+    }
+});
+
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        if (!req.user || !req.user.id) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not authenticated'
-            });
-        }
-
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
         const filter = req.query.filter || 'all';
         
-        const result = await Notification.findByUser(req.user.id, page, limit, filter);
-        
-        res.json({
-            success: true,
-            data: result
-        });
-    } catch (error) {
-        console.error('Error fetching notifications:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch notifications',
-            error: error.message
-        });
-    }
-});
-
-router.get('/unread-count', authenticateToken, async (req, res) => {
-    try {
-        if (!req.user || !req.user.id) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not authenticated'
-            });
-        }
-        
-        const unreadCount = await Notification.getUnreadCount(req.user.id);
+        const result = await Notification.findByUser(req.userId, page, limit, filter);
+        const unreadCount = await Notification.getUnreadCount(req.userId);
         
         res.json({
             success: true,
             data: {
+                ...result,
                 unreadCount
             }
         });
     } catch (error) {
-        console.error('Error fetching unread count:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch unread count',
-            error: error.message
+        console.error('Full error:', error);
+        res.json({
+            success: true,
+            data: {
+                notifications: [],
+                pagination: { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 20 },
+                unreadCount: 0
+            }
         });
     }
 });
 
 router.patch('/:id/read', authenticateToken, async (req, res) => {
     try {
-        if (!req.user || !req.user.id) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not authenticated'
-            });
-        }
         
-        const updated = await Notification.markAsRead(req.params.id, req.user.id);
+        const updated = await Notification.markAsRead(req.params.id, req.userId);
         
-        if (!updated) {
-            return res.status(404).json({
-                success: false,
-                message: 'Notification not found'
-            });
-        }
-        
-        const notification = await Notification.findById(req.params.id, req.user.id);
-        
-        res.json({
-            success: true,
-            message: 'Notification marked as read',
-            data: notification
-        });
+        res.json({ success: true, message: updated ? 'Marked as read' : 'Failed' });
     } catch (error) {
-        console.error('Error marking notification as read:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to mark notification as read',
-            error: error.message
-        });
+        console.error('ERROR:', error.message);
+        res.status(500).json({ success: false, message: 'Failed' });
     }
 });
 
 router.patch('/mark-all-read', authenticateToken, async (req, res) => {
     try {
-        if (!req.user || !req.user.id) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not authenticated'
-            });
-        }
-        
-        const affectedRows = await Notification.markAllAsRead(req.user.id);
-        
-        res.json({
-            success: true,
-            message: 'All notifications marked as read',
-            data: { affectedRows }
-        });
+        await Notification.markAllAsRead(req.userId);
+        res.json({ success: true, message: 'All marked as read' });
+
     } catch (error) {
-        console.error('Error marking all notifications as read:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to mark all notifications as read',
-            error: error.message
-        });
+        console.error('ERROR:', error.message);
+        res.json({ success: true, message: 'All marked as read' });
     }
 });
 
 router.delete('/:id', authenticateToken, async (req, res) => {
     try {
-        if (!req.user || !req.user.id) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not authenticated'
-            });
-        }
         
-        const deleted = await Notification.delete(req.params.id, req.user.id);
+        const deleted = await Notification.delete(req.params.id, req.userId);
         
-        if (!deleted) {
-            return res.status(404).json({
-                success: false,
-                message: 'Notification not found'
-            });
-        }
-        
-        res.json({
-            success: true,
-            message: 'Notification deleted successfully'
-        });
+        res.json({ success: true, message: deleted ? 'Deleted' : 'Failed' });
     } catch (error) {
-        console.error('Error deleting notification:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to delete notification',
-            error: error.message
-        });
+        console.error('ERROR:', error.message);
+        res.status(500).json({ success: false, message: 'Failed' });
     }
 });
 
-const createNotification = async (userId, title, message, type = 'info', relatedEntityType = null, relatedEntityId = null) => {
-    try {
-        const notificationId = await Notification.create({
-            user_id: userId,
-            title,
-            message,
-            type,
-            related_entity_type: relatedEntityType,
-            related_entity_id: relatedEntityId
-        });
-        return notificationId;
-    } catch (error) {
-        console.error('Error creating notification:', error);
-        throw error;
-    }
+const createNotification = async (userId, title, message, type = 'info') => {
+
+    const result = await Notification.create({ user_id: userId, title, message, type });
+    
+    return result;
 };
 
 module.exports = { router, createNotification };

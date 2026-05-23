@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { logout } from '../../store/slices/authSlice';
 import { fetchUnreadCount } from '../../store/slices/notificationSlice';
+import NotificationDropdown from './NotificationDropdown';
 import { 
   FiLogOut, 
   FiBell, 
@@ -20,12 +21,18 @@ const TopBar: React.FC = () => {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const { unreadCount } = useAppSelector((state) => state.notifications);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated && user?.id) {
-      dispatch(fetchUnreadCount());
+      dispatch(fetchUnreadCount()).catch((error) => {
+        console.log('Notification fetch failed but continuing:', error);
+      });
+      
       const interval = setInterval(() => {
-        dispatch(fetchUnreadCount());
+        if (isAuthenticated && user?.id) {
+          dispatch(fetchUnreadCount()).catch(() => {});
+        }
       }, 30000);
       
       return () => clearInterval(interval);
@@ -37,16 +44,21 @@ const TopBar: React.FC = () => {
     navigate('/login');
   };
 
+  const handleNotificationClick = () => {
+    setNotificationDropdownOpen(!notificationDropdownOpen);
+  };
+
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: <FiLayout className="w-4 h-4" /> },
     { path: '/issues', label: 'View Issues', icon: <FiList className="w-4 h-4" /> },
-    { path: '/notifications', label: 'Notifications', icon: <FiBell className="w-4 h-4" />, badge: unreadCount },
   ];
 
   const handleNavigation = (path: string) => {
     navigate(path);
     setMobileMenuOpen(false);
   };
+
+  const isNotificationsPage = location.pathname === '/notifications';
 
   return (
     <>
@@ -71,7 +83,7 @@ const TopBar: React.FC = () => {
                   <button
                     key={item.path}
                     onClick={() => handleNavigation(item.path)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 relative
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200
                       ${location.pathname === item.path 
                         ? 'bg-primary-50 text-primary-700 font-medium' 
                         : 'text-gray-600 hover:bg-gray-100'
@@ -79,13 +91,32 @@ const TopBar: React.FC = () => {
                   >
                     {item.icon}
                     <span>{item.label}</span>
-                    {item.badge !== undefined && item.badge > 0 && (
+                  </button>
+                ))}
+                
+                <div className="relative">
+                  <button
+                    onClick={handleNotificationClick}
+                    className={`notification-button flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 relative
+                      ${notificationDropdownOpen || isNotificationsPage
+                        ? 'bg-primary-50 text-primary-700 font-medium' 
+                        : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                  >
+                    <FiBell className="w-4 h-4" />
+                    <span>Notifications</span>
+                    {unreadCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full min-w-[20px] h-5 px-1 flex items-center justify-center">
-                        {item.badge > 99 ? '99+' : item.badge}
+                        {unreadCount > 99 ? '99+' : unreadCount}
                       </span>
                     )}
                   </button>
-                ))}
+                  
+                  <NotificationDropdown 
+                    isOpen={notificationDropdownOpen}
+                    onClose={() => setNotificationDropdownOpen(false)}
+                  />
+                </div>
               </div>
 
               <div className="flex items-center gap-4 pl-4 border-l border-gray-200">
@@ -108,8 +139,13 @@ const TopBar: React.FC = () => {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all duration-200"
+              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all duration-200 relative"
             >
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  {unreadCount}
+                </span>
+              )}
               {mobileMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
             </button>
           </div>
@@ -134,13 +170,30 @@ const TopBar: React.FC = () => {
                     {item.icon}
                     <span>{item.label}</span>
                   </div>
-                  {item.badge !== undefined && item.badge > 0 && (
-                    <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1">
-                      {item.badge}
-                    </span>
-                  )}
                 </button>
               ))}
+              
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate('/notifications');
+                }}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200
+                  ${isNotificationsPage 
+                    ? 'bg-primary-50 text-primary-700 font-medium' 
+                    : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+              >
+                <div className="flex items-center gap-3">
+                  <FiBell className="w-4 h-4" />
+                  <span>Notifications</span>
+                </div>
+                {unreadCount > 0 && (
+                  <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
               
               <div className="border-t border-gray-200 my-2 pt-2">
                 <div className="px-4 py-2">
@@ -173,6 +226,12 @@ const TopBar: React.FC = () => {
         }
         .animate-slide-down {
           animation: slide-down 0.2s ease-out;
+        }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
     </>

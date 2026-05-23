@@ -43,6 +43,7 @@ export const fetchNotifications = createAsyncThunk(
   async ({ page = 1, filter = 'all' }: { page?: number; filter?: string }) => {
     try {
       const response = await api.get(`/notifications?page=${page}&limit=20&filter=${filter}`);
+      console.log("Fetch notifications response:", response.data.data);
       return response.data.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -56,7 +57,6 @@ export const fetchUnreadCount = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/notifications/unread-count');
-      console.log('Unread count response:', response.data);
       return response.data.data.unreadCount;
     } catch (error: unknown) {
       console.error('Error fetching unread count:', error);
