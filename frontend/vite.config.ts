@@ -8,4 +8,12 @@ export default defineConfig({
     include: ['@reduxjs/toolkit'],
     force: true,
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      }
+    }
+  }
 });

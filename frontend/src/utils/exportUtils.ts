@@ -58,6 +58,7 @@ export const exportToJSON = (issues: Issue[], filename: string = 'issues_export'
 };
 
 export const copyToClipboard = async (issues: Issue[], format: 'json' | 'text' = 'json') => {
+  // eslint-disable-next-line no-useless-assignment
   let textToCopy = '';
   
   if (format === 'json') {

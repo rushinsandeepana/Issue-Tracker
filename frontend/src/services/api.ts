@@ -3,7 +3,8 @@ import type { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axio
 import type { LoginCredentials, RegisterData, AuthResponse, CreateIssueData, UpdateIssueData, IssuesResponse, Issue, ApiError } from '../types/index';
 import toast from 'react-hot-toast';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const API_URL = (import.meta as any).env.VITE_API_URL || '/api';
 
 const api: AxiosInstance = axios.create({
   baseURL: API_URL,
@@ -60,6 +61,7 @@ export const authAPI = {
 };
 
 export const issuesAPI = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getAll: (params?: Record<string, any>) => 
     api.get<IssuesResponse>('/issues', { params }),
   
