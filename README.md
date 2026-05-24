@@ -5,6 +5,15 @@ A full-stack Issue Tracker application built with React, TypeScript, Node.js, Ex
 
 ---
 
+## 📥 Clone Project
+
+```bash
+git clone https://github.com/rushinsandeepana/Issue-Tracker.git
+cd Issue-Tracker
+```
+
+---
+
 ## 📦 Dependencies
 
 ### Backend
@@ -84,12 +93,14 @@ npm run dev
 
 ## ▶️ Usage
 
-1. Start backend server
-2. Start frontend server
-3. Open browser at:
+1. Clone the repository
+2. Setup database
+3. Start backend server
+4. Start frontend server
+5. Open browser:
    - Frontend: http://localhost:5173
    - Backend: http://localhost:5000
-4. Register a new user and start managing issues
+6. Register a new user and start managing issues
 
 ---
 
