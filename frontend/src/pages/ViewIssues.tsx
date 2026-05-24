@@ -21,6 +21,7 @@ import IssueForm from '../components/issues/IssueForm';
 import TopBar from '../components/common/TopBar';
 import { exportToCSV, exportToJSON, copyToClipboard } from '../utils/exportUtils';
 import toast from 'react-hot-toast';
+import type { CreateIssueData, Issue } from '../types'; // Add this import
 
 const ViewIssues: React.FC = () => {
   const navigate = useNavigate();
@@ -37,20 +38,18 @@ const ViewIssues: React.FC = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [issueToDelete, setIssueToDelete] = useState<number | null>(null);
   const [formModalOpen, setFormModalOpen] = useState(false);
-  const [editingIssue, setEditingIssue] = useState<unknown>(null);
+  const [editingIssue, setEditingIssue] = useState<Issue | null>(null); // Changed from unknown to Issue | null
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchIssues());
   }, [dispatch, filters, pagination.page]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleViewIssue = (issue: any) => {
+  const handleViewIssue = (issue: Issue) => { // Changed from any to Issue
     navigate(`/issues/${issue.id}`);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleEditIssue = (issue: any) => {
+  const handleEditIssue = (issue: Issue) => { // Changed from any to Issue
     setEditingIssue(issue);
     setFormModalOpen(true);
   };
@@ -68,8 +67,7 @@ const ViewIssues: React.FC = () => {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFormSubmit = async (formData: any) => {    
+  const handleFormSubmit = async (formData: CreateIssueData) => {
     try {
       if (editingIssue) {
         await dispatch(updateIssue({ 
@@ -86,9 +84,9 @@ const ViewIssues: React.FC = () => {
       setEditingIssue(null);
       dispatch(fetchIssues());
       
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to save issue');
+    } catch (error: unknown) { // Changed from any to unknown
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save issue';
+      toast.error(errorMessage);
     }
   };
 
@@ -127,45 +125,45 @@ const ViewIssues: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <TopBar />
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">All Issues</h2>
-            <p className="text-gray-600 mt-1">Manage and track all your project issues</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">All Issues</h2>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and track all your project issues</p>
           </div>
           
           <div className="flex gap-3">
             <div className="relative">
               <button
                 onClick={() => setExportMenuOpen(!exportMenuOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
               >
                 <FiDownload className="w-5 h-5" />
                 Export
               </button>
               
               {exportMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20">
                   <button
                     onClick={() => handleExport('csv')}
-                    className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    className="w-full px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
                   >
                     <FiFileText className="w-4 h-4" />
                     Export as CSV
                   </button>
                   <button
                     onClick={() => handleExport('json')}
-                    className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    className="w-full px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
                   >
                     <FiFile className="w-4 h-4" />
                     Export as JSON
                   </button>
                   <button
                     onClick={() => handleExport('clipboard')}
-                    className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    className="w-full px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
                   >
                     <FiCopy className="w-4 h-4" />
                     Copy to Clipboard
@@ -223,7 +221,7 @@ const ViewIssues: React.FC = () => {
                 <button
                   onClick={handlePrevPage}
                   disabled={pagination.page === 1}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-all duration-200"
+                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-gray-700 dark:text-gray-300"
                 >
                   <FiChevronLeft className="w-4 h-4" />
                   Previous
@@ -249,7 +247,7 @@ const ViewIssues: React.FC = () => {
                         className={`w-10 h-10 rounded-lg transition-all duration-200 ${
                           pagination.page === pageNum
                             ? 'bg-primary-600 text-white shadow-md'
-                            : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
                         }`}
                       >
                         {pageNum}
@@ -261,7 +259,7 @@ const ViewIssues: React.FC = () => {
                 <button
                   onClick={handleNextPage}
                   disabled={pagination.page === pagination.totalPages}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-all duration-200"
+                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-gray-700 dark:text-gray-300"
                 >
                   Next
                   <FiChevronRight className="w-4 h-4" />
@@ -269,7 +267,7 @@ const ViewIssues: React.FC = () => {
               </div>
             )}
             
-            <div className="text-center text-sm text-gray-500 mt-4">
+            <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
               Showing {issues.length} of {pagination.total} issues
             </div>
           </>
@@ -285,7 +283,7 @@ const ViewIssues: React.FC = () => {
         title={editingIssue ? 'Edit Issue' : 'Create New Issue'}
       >
         <IssueForm
-          initialData={editingIssue}
+          initialData={editingIssue || undefined}
           onSubmit={handleFormSubmit}
           onCancel={() => {
             setFormModalOpen(false);

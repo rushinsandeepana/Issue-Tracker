@@ -50,6 +50,7 @@ export const fetchIssues = createAsyncThunk(
         limit: 10,
       });
       return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch issues');
     }
@@ -62,6 +63,7 @@ export const fetchIssueById = createAsyncThunk(
     try {
       const response = await issuesAPI.getById(id);
       return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Failed to fetch issue');
     }
@@ -76,6 +78,7 @@ export const createIssue = createAsyncThunk(
       toast.success('Issue created successfully');
       dispatch(fetchIssues());
       return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response?.data?.error || 'Failed to create issue');
       return rejectWithValue(error.response?.data?.error);
@@ -91,6 +94,7 @@ export const updateIssue = createAsyncThunk(
       toast.success('Issue updated successfully');
       dispatch(fetchIssues());
       return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response?.data?.error || 'Failed to update issue');
       return rejectWithValue(error.response?.data?.error);
@@ -106,6 +110,7 @@ export const deleteIssue = createAsyncThunk(
       toast.success('Issue deleted successfully');
       dispatch(fetchIssues());
       return id;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response?.data?.error || 'Failed to delete issue');
       return rejectWithValue(error.response?.data?.error);

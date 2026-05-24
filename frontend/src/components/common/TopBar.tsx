@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../store/store';
 import { logout } from '../../store/slices/authSlice';
 import { fetchUnreadCount } from '../../store/slices/notificationSlice';
 import NotificationDropdown from './NotificationDropdown';
+import ThemeToggle from './ThemeToggle';
 import { 
   FiLogOut, 
   FiBell, 
@@ -62,7 +63,7 @@ const TopBar: React.FC = () => {
 
   return (
     <>
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200">
+      <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/dashboard')}>
@@ -70,10 +71,10 @@ const TopBar: React.FC = () => {
                 <span className="text-white font-bold text-xl">IT</span>
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-500">
                   Issue Tracker
                 </h1>
-                <p className="text-xs text-gray-500 hidden sm:block">Track and manage issues efficiently</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">Track and manage issues efficiently</p>
               </div>
             </div>
             
@@ -85,8 +86,8 @@ const TopBar: React.FC = () => {
                     onClick={() => handleNavigation(item.path)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200
                       ${location.pathname === item.path 
-                        ? 'bg-primary-50 text-primary-700 font-medium' 
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 font-medium' 
+                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                   >
                     {item.icon}
@@ -99,8 +100,8 @@ const TopBar: React.FC = () => {
                     onClick={handleNotificationClick}
                     className={`notification-button flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 relative
                       ${notificationDropdownOpen || isNotificationsPage
-                        ? 'bg-primary-50 text-primary-700 font-medium' 
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 font-medium' 
+                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                   >
                     <FiBell className="w-4 h-4" />
@@ -119,17 +120,18 @@ const TopBar: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 pl-4 border-l border-gray-200">
+              <div className="flex items-center gap-4 pl-4 border-l border-gray-200 dark:border-gray-700">
+                <ThemeToggle />
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
                     <FiUser className="w-3 h-3" />
                     {user?.name || user?.email?.split('@')[0] || 'User'}
                   </p>
-                  <p className="text-xs text-gray-500 hidden xl:block">{user?.email || ''}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 hidden xl:block">{user?.email || ''}</p>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                  className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
                 >
                   <FiLogOut className="w-5 h-5" />
                   <span className="hidden lg:inline">Logout</span>
@@ -139,7 +141,7 @@ const TopBar: React.FC = () => {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all duration-200 relative"
+              className="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 relative"
             >
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
@@ -154,7 +156,7 @@ const TopBar: React.FC = () => {
 
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
-          <div className="fixed top-[73px] left-0 right-0 bg-white shadow-xl rounded-b-2xl z-50 animate-slide-down" onClick={e => e.stopPropagation()}>
+          <div className="fixed top-[73px] left-0 right-0 bg-white dark:bg-gray-900 shadow-xl rounded-b-2xl z-50 animate-slide-down" onClick={e => e.stopPropagation()}>
             <div className="p-4 space-y-2">
               {navItems.map((item) => (
                 <button
@@ -162,8 +164,8 @@ const TopBar: React.FC = () => {
                   onClick={() => handleNavigation(item.path)}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200
                     ${location.pathname === item.path 
-                      ? 'bg-primary-50 text-primary-700 font-medium' 
-                      : 'text-gray-600 hover:bg-gray-50'
+                      ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 font-medium' 
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                 >
                   <div className="flex items-center gap-3">
@@ -180,8 +182,8 @@ const TopBar: React.FC = () => {
                 }}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200
                   ${isNotificationsPage 
-                    ? 'bg-primary-50 text-primary-700 font-medium' 
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 font-medium' 
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                   }`}
               >
                 <div className="flex items-center gap-3">
@@ -195,14 +197,20 @@ const TopBar: React.FC = () => {
                 )}
               </button>
               
-              <div className="border-t border-gray-200 my-2 pt-2">
+              <div className="border-t border-gray-200 dark:border-gray-700 my-2 pt-2">
                 <div className="px-4 py-2">
-                  <p className="text-sm font-medium text-gray-700">{user?.name || 'User'}</p>
-                  <p className="text-xs text-gray-500">{user?.email || ''}</p>
+                  <ThemeToggle />
+                </div>
+              </div>
+              
+              <div className="border-t border-gray-200 dark:border-gray-700 my-2 pt-2">
+                <div className="px-4 py-2">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{user?.name || 'User'}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || ''}</p>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
                 >
                   <FiLogOut className="w-5 h-5" />
                   <span>Logout</span>

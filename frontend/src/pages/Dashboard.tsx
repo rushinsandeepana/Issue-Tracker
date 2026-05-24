@@ -26,13 +26,13 @@ const Dashboard: React.FC = () => {
   }, [dispatch, filters]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <TopBar />
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Dashboard</h2>
-          <p className="text-gray-600 mt-1">Welcome back, {user?.name}! Here's your issue overview.</p>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-300">Dashboard</h2>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Welcome back, {user?.name}! Here's your issue overview.</p>
         </div>
 
         {loading ? (
@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
             
             <div className="mt-8">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold text-gray-900">Analytics</h3>
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-300">Analytics</h3>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setChartType('bar')}

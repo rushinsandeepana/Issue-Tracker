@@ -25,6 +25,7 @@ export const login = createAsyncThunk(
     try {
       const response = await authAPI.login(credentials);
       return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Login failed');
     }
@@ -37,6 +38,7 @@ export const register = createAsyncThunk(
     try {
       const response = await authAPI.register(data);
       return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Registration failed');
     }

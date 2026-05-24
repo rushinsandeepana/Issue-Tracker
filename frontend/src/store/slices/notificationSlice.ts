@@ -68,8 +68,8 @@ export const fetchUnreadCount = createAsyncThunk(
 export const markAsRead = createAsyncThunk(
   'notifications/markAsRead',
   async (id: number) => {
-    const response = await api.patch(`/notifications/${id}/read`);
-    return response.data.data;
+    await api.patch(`/notifications/${id}/read`);
+    return id;
   }
 );
 
@@ -126,9 +126,9 @@ const notificationSlice = createSlice({
         state.unreadCount = action.payload;
       })
       .addCase(markAsRead.fulfilled, (state, action) => {
-        const index = state.notifications.findIndex(n => n.id === action.payload.id);
-        if (index !== -1) {
-          state.notifications[index].read = true;
+        const notification = state.notifications.find(n => n.id === action.payload);
+        if (notification) {
+          notification.read = true;
           state.unreadCount = Math.max(0, state.unreadCount - 1);
         }
       })

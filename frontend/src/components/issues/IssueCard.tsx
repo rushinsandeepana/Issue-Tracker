@@ -22,39 +22,39 @@ const IssueCard: React.FC<IssueCardProps> = ({
 }) => {
   if (compact) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 group">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-300 group">
         <div className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
                 {issue.title}
               </h3>
               <div className="flex flex-wrap gap-2 mb-3">
                 <StatusBadge status={issue.status} />
                 <PriorityBadge priority={issue.priority} />
               </div>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {formatDistanceToNow(new Date(issue.created_at), { addSuffix: true })}
               </p>
             </div>
             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 onClick={() => onView(issue)}
-                className="p-1.5 text-gray-500 hover:text-primary-600 rounded-lg hover:bg-primary-50 transition-colors"
+                className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors"
                 title="View Details"
               >
                 <FiEye className="w-4 h-4" />
               </button>
               <button
                 onClick={() => onEdit(issue)}
-                className="p-1.5 text-gray-500 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
                 title="Edit Issue"
               >
                 <FiEdit2 className="w-4 h-4" />
               </button>
               <button
                 onClick={() => onDelete(issue.id)}
-                className="p-1.5 text-gray-500 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                 title="Delete Issue"
               >
                 <FiTrash2 className="w-4 h-4" />
@@ -67,11 +67,11 @@ const IssueCard: React.FC<IssueCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 group">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-300 group">
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
               {issue.title}
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -82,21 +82,21 @@ const IssueCard: React.FC<IssueCardProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => onView(issue)}
-              className="p-2 text-gray-500 hover:text-primary-600 rounded-lg hover:bg-primary-50 transition-colors"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors"
               title="View Details"
             >
               <FiEye className="w-5 h-5" />
             </button>
             <button
               onClick={() => onEdit(issue)}
-              className="p-2 text-gray-500 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
               title="Edit Issue"
             >
               <FiEdit2 className="w-5 h-5" />
             </button>
             <button
               onClick={() => onDelete(issue.id)}
-              className="p-2 text-gray-500 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
               title="Delete Issue"
             >
               <FiTrash2 className="w-5 h-5" />
@@ -104,11 +104,11 @@ const IssueCard: React.FC<IssueCardProps> = ({
           </div>
         </div>
         
-        <p className="text-gray-600 mb-4 line-clamp-3">
+        <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
           {issue.description || 'No description provided'}
         </p>
         
-        <div className="flex items-center justify-between text-sm text-gray-500 pt-3 border-t">
+        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-200 dark:border-gray-700">
           <span>Created {formatDistanceToNow(new Date(issue.created_at), { addSuffix: true })}</span>
           {issue.updated_at !== issue.created_at && (
             <span>Updated {formatDistanceToNow(new Date(issue.updated_at), { addSuffix: true })}</span>

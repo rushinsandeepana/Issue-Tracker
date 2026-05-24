@@ -35,11 +35,11 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
   const getIcon = (type: string) => {
     switch (type) {
       case 'success':
-        return <FiCheckCircle className="w-4 h-4 text-green-500" />;
+        return <FiCheckCircle className="w-4 h-4 text-green-500 dark:text-green-400" />;
       case 'warning':
-        return <FiAlertCircle className="w-4 h-4 text-yellow-500" />;
+        return <FiAlertCircle className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />;
       default:
-        return <FiInfo className="w-4 h-4 text-blue-500" />;
+        return <FiInfo className="w-4 h-4 text-blue-500 dark:text-blue-400" />;
     }
   };
 
@@ -77,11 +77,11 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
 
   return (
     <>
-      <div className="notification-dropdown absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50 animate-slide-down overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-primary-50 to-white">
+      <div className="notification-dropdown absolute right-0 mt-2 w-96 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 animate-slide-down overflow-hidden">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-primary-50 to-white dark:from-gray-800 dark:to-gray-800">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
-            <p className="text-xs text-gray-500">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Notifications</h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               You have {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
             </p>
           </div>
@@ -89,27 +89,27 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-xs px-2 py-1 text-primary-600 hover:bg-primary-50 rounded transition-all duration-200"
+                className="text-xs px-2 py-1 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded transition-all duration-200"
               >
                 Mark all read
               </button>
             )}
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-all duration-200"
+              className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-200"
             >
               <FiX className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        <div className="flex border-b border-gray-200 bg-gray-50">
+        <div className="flex border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
           <button
             onClick={() => setFilter('unread')}
             className={`flex-1 px-4 py-2 text-sm font-medium transition-all duration-200 ${
               filter === 'unread'
-                ? 'text-primary-600 border-b-2 border-primary-600 bg-white'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400 bg-white dark:bg-gray-800'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
             }`}
           >
             Unread
@@ -123,8 +123,8 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
             onClick={() => setFilter('all')}
             className={`flex-1 px-4 py-2 text-sm font-medium transition-all duration-200 ${
               filter === 'all'
-                ? 'text-primary-600 border-b-2 border-primary-600 bg-white'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400 bg-white dark:bg-gray-800'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
             }`}
           >
             All
@@ -138,19 +138,19 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
             </div>
           ) : notifications.length === 0 ? (
             <div className="text-center py-8">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-3">
-                <FiInbox className="w-6 h-6 text-gray-400" />
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full mb-3">
+                <FiInbox className="w-6 h-6 text-gray-400 dark:text-gray-500" />
               </div>
-              <p className="text-gray-500 text-sm">No notifications</p>
-              <p className="text-gray-400 text-xs mt-1">You're all caught up!</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">No notifications</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">You're all caught up!</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 dark:divide-gray-700">
               {notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-3 hover:bg-gray-50 transition-all duration-200 ${
-                    !notification.read ? 'bg-primary-50/20' : ''
+                  className={`p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 ${
+                    !notification.read ? 'bg-primary-50/20 dark:bg-primary-900/20' : ''
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -160,13 +160,13 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
                     <div className="flex-grow min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
-                          <h4 className={`text-sm font-medium ${!notification.read ? 'text-gray-900' : 'text-gray-700'}`}>
+                          <h4 className={`text-sm font-medium ${!notification.read ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
                             {notification.title}
                           </h4>
-                          <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-2">
                             {notification.message}
                           </p>
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                             {formatDate(notification.created_at)}
                           </p>
                         </div>
@@ -174,14 +174,14 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
                           {!notification.read && (
                             <button
                               onClick={() => handleMarkAsRead(notification.id)}
-                              className="text-xs px-2 py-0.5 text-primary-600 hover:bg-primary-50 rounded transition-all duration-200"
+                              className="text-xs px-2 py-0.5 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded transition-all duration-200"
                             >
                               Read
                             </button>
                           )}
                           <button
                             onClick={() => handleDelete(notification.id)}
-                            className="text-gray-400 hover:text-red-600 transition-all duration-200"
+                            className="text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-all duration-200"
                           >
                             <FiTrash2 className="w-3.5 h-3.5" />
                           </button>
@@ -195,13 +195,13 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
           )}
         </div>
 
-        <div className="p-3 border-t border-gray-200 bg-gray-50">
+        <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
           <button
             onClick={() => {
               onClose();
               window.location.href = '/notifications';
             }}
-            className="w-full text-center text-sm text-primary-600 hover:text-primary-700 font-medium"
+            className="w-full text-center text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
           >
             View All Notifications
           </button>

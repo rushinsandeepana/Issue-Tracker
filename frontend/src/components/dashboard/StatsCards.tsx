@@ -34,6 +34,13 @@ const StatsCards: React.FC<StatsCardsProps> = ({ statusCounts }) => {
     closed: 'bg-gray-100 text-gray-700 border-gray-200'
   };
 
+  const progressBarColors = {
+    open: 'bg-orange-500',
+    in_progress: 'bg-blue-500',
+    resolved: 'bg-green-500',
+    closed: 'bg-gray-500'
+  };
+
   const stats = [
     { key: 'open', label: 'Open Issues', color: 'orange' },
     { key: 'in_progress', label: 'In Progress', color: 'blue' },
@@ -43,12 +50,16 @@ const StatsCards: React.FC<StatsCardsProps> = ({ statusCounts }) => {
 
   const total = statusCounts.open + statusCounts.in_progress + statusCounts.resolved + statusCounts.closed;
 
+  const getPercentage = (count: number): number => {
+    return total === 0 ? 0 : (count / total) * 100;
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {stats.map((stat) => (
         <div 
           key={stat.key}
-          className="card p-4 cursor-pointer hover:scale-105 transition-transform duration-200" 
+          className="card p-4 cursor-pointer hover:scale-105 transition-transform duration-200 bg-gray-300 rounded-lg border" 
           onClick={() => dispatch(setFilters({ status: stat.key as never }))}
         >
           <div className="flex items-center justify-between">
@@ -62,16 +73,20 @@ const StatsCards: React.FC<StatsCardsProps> = ({ statusCounts }) => {
               {statusIcons[stat.key as keyof typeof statusIcons]}
             </div>
           </div>
-          {stat.key === 'open' && (
-            <div className="mt-2">
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-orange-500 rounded-full h-2 transition-all duration-500"
-                  style={{ width: `${(statusCounts.open / total) * 100}%` }}
-                />
-              </div>
+          
+          {/* Progress bar for all boxes */}
+          <div className="mt-2">
+            <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <span>Progress</span>
+              <span>{getPercentage(statusCounts[stat.key as keyof typeof statusCounts]).toFixed(0)}%</span>
             </div>
-          )}
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className={`${progressBarColors[stat.key as keyof typeof progressBarColors]} rounded-full h-2 transition-all duration-500`}
+                style={{ width: `${getPercentage(statusCounts[stat.key as keyof typeof statusCounts])}%` }}
+              />
+            </div>
+          </div>
         </div>
       ))}
     </div>

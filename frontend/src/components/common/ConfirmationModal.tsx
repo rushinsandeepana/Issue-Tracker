@@ -21,9 +21,9 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   type = 'danger'
 }) => {
   const colors = {
-    danger: 'bg-red-100 text-red-700',
-    warning: 'bg-yellow-100 text-yellow-700',
-    info: 'bg-blue-100 text-blue-700'
+    danger: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+    warning: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+    info: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
   };
 
   return (
@@ -32,7 +32,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${colors[type]} mb-4`}>
           <FiAlertTriangle className="w-8 h-8" />
         </div>
-        <p className="text-gray-600 mb-6">{message}</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">{message}</p>
         <div className="flex gap-3 justify-center">
           <Button variant="secondary" onClick={onClose}>
             Cancel
