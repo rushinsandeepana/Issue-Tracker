@@ -1,7 +1,0 @@
-{
-  "name": "issue-tracker-vercel",
-  "version": "1.0.0",
-  "scripts": {
-    "vercel-build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
-  }
-}
